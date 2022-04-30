@@ -13,9 +13,9 @@ mysql = MySQL()
 
 
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = ''
-app.config['MYSQL_DATABASE_DB'] = 'bd_atividade'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'mudar123'
+app.config['MYSQL_DATABASE_DB'] = 'db_atividade'
+app.config['MYSQL_DATABASE_HOST'] = '172.17.0.2'
 mysql.init_app(app)
 
 
@@ -28,11 +28,11 @@ def main():
 def retornar():
     nome = request.form["nome"]
     email = request.form["email"]
-    senha = request.form["senha"]
-    if nome and email and senha:
+    endereco = request.form["endereco"]
+    if nome and email and endereco:
         conexao = mysql.connect()
-        cursor = mysql.cursor()
-        cursor.execute('INSERT INTO tb_pessoas (nome, email, senha) VALUES (%s, %s, %s)', (nome, email, senha))
+        cursor = conexao.curso()
+        cursor.execute('INSERT INTO usuario (nome, email, endereco) VALUES (%s, %s, %s)', (nome, email, endereco))
         conexao.commit()
         cadastrado = f"O {nome} foi cadastrado com sucesso :)"
         return cadastrado
@@ -44,8 +44,8 @@ def retornar():
 @app.route("/listar", methods=["POST", "GET"])
 def listar_pessoas():
     conexao = mysql.connect()
-    cursor = mysql.cursor()
-    cursor.execute('SELECT nome FROM tb_pessoas')
+    cursor = conexao.cursor()
+    cursor.execute('SELECT nome FROM usuario')
     data = cursor.fetchall()
     #for x in range(len(data)):
         #print(data[x])
